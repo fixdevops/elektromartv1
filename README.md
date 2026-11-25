@@ -57,6 +57,28 @@ npm run build    # production build
 
 > Tampilan sudah diuji responsif di lebar **390 px (HP)**, **768 px (tablet)**, dan **1440 px (desktop)** tanpa horizontal scroll. Beranda, produk, keranjang, checkout, akun, wishlist, notifikasi, tabel admin, dan halaman info menyesuaikan layar. Halaman masuk/daftar sengaja ditampilkan tanpa navbar/footer agar tidak dobel di HP.
 
+### Deploy ke Vercel
+
+1. Import repo GitHub `fixdevops/elektromartv1` di Vercel.
+2. Set **Root Directory = `website`** (Next.js tidak ada di root repo).
+3. Framework: **Next.js**, build command `npm run build`.
+4. Di **Project Settings → Environment Variables**, isi **hanya**:
+   ```bash
+   NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+   ```
+   > Jangan memasukkan `EXPO_PUBLIC_*` ke Vercel. Variable itu hanya dipakai `mobile/.env` / build EAS. Next.js hanya mengekspos variable berprefiks `NEXT_PUBLIC_` ke browser.
+5. Setelah env berubah, lakukan **Redeploy** (nilai `NEXT_PUBLIC_*` di-inline saat build).
+6. Di Supabase → **Authentication → URL Configuration**, tambahkan:
+   ```text
+   Site URL:       https://<nama-app>.vercel.app
+   Redirect URLs:  https://<nama-app>.vercel.app/**
+                   exp://127.0.0.1:8081/**
+                   elektromart://**
+   ```
+
+Web di Vercel dan aplikasi di HP tetap **sinkron** karena keduanya memanggil Supabase project yang sama (bukan saling memanggil). Jadi perubahan status pesanan dari admin web langsung muncul di HP lewat realtime, dan sebaliknya. Jika Supabase project diganti, update env di **dua tempat** lalu deploy ulang web dan build ulang APK.
+
 ### Halaman
 | URL | Keterangan |
 |-----|-----------|
