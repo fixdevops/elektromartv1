@@ -126,6 +126,28 @@ npx expo start --localhost --port 8081
 
 > Konfigurasi Android SDK sudah diperbaiki: `ANDROID_HOME` dan `ANDROID_SDK_ROOT` sekarang disetel ke `D:\` karena `adb.exe` ada di `D:\platform-tools\adb.exe`. Tanpa ini, tombol `a` di Expo CLI error *"The system cannot find the path specified"*. Tutup dan buka lagi terminal setelah mengubah environment variable.
 
+### Build APK standalone (EAS Build)
+
+Kode dan aset sudah siap. yang belum ada hanyalah akun Expo + `projectId`.
+
+```bash
+cd mobile
+npm install -g eas-cli
+eas login
+eas init                         # sekali saja; menambahkan extra.eas.projectId ke app.json
+eas build -p android --profile production --format apk
+```
+
+`mobile/eas.json` sudah berisi env `EXPO_PUBLIC_SUPABASE_URL` dan `EXPO_PUBLIC_SUPABASE_ANON_KEY` untuk profile `preview` dan `production` (file `.env` lokal **tidak** ikut ter-upload ke server build EAS). Anon key aman dipakai di aplikasi; **jangan** pernah memasukkan `service_role key`.
+
+Hasil build berupa tautan unduhan APK di dashboard Expo. Untuk uji internal tanpa Play Store, pakai:
+
+```bash
+eas build -p android --profile preview --format apk
+```
+
+> Build lokal lewat `expo run:android` belum bisa dilakukan di PC ini karena Android SDK lengkap (`cmdline-tools`, `platforms`, `build-tools`) dan JDK belum terpasang — yang ada hanya `platform-tools` untuk ADB. Pakai EAS Build (cloud).
+
 Fitur: beranda + carousel & flash sale, produk + filter & load more, detail + galeri/varian/ulasan, keranjang + voucher, checkout + bukti bayar, pesanan + tracking, wishlist, notifikasi realtime, profil/alamat, dan panel admin (pesanan, produk, voucher, role pengguna).
 
 ---
