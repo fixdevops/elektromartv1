@@ -38,6 +38,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const { user, profile, signOut } = useAuthStore()
   const totalItems = useCartStore(s => s.totalItems())
+  const userId = user?.id
 
   // Kategori diambil dari Supabase; fallback memakai slug seed yang benar.
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function Navbar() {
 
   // Jumlah notifikasi belum dibaca untuk user yang sedang masuk.
   useEffect(() => {
-    if (!user) {
+    if (!userId) {
       setUnreadCount(0)
       return
     }
@@ -67,17 +68,17 @@ export default function Navbar() {
       const { count, error } = await supabase
         .from('notifications')
         .select('id', { count: 'exact', head: true })
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .eq('is_read', false)
       if (active && !error) setUnreadCount(count ?? 0)
     }
 
     void fetchUnread()
     const channel = supabase
-      .channel(`navbar-notifications-${user.id}`)
+      .channel(`navbar-notifications-${userId}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
+        { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
         () => { void fetchUnread() },
       )
       .subscribe()
@@ -86,7 +87,7 @@ export default function Navbar() {
       active = false
       void supabase.removeChannel(channel)
     }
-  }, [user?.id])
+  }, [userId])
 
   useEffect(() => {
     const onScroll = () => {

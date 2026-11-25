@@ -100,7 +100,7 @@ export default function CheckoutPage() {
     toast.success('Voucher berhasil dipakai')
   }
 
-  const useAddress = (a: Address) => {
+  const applyAddress = (a: Address) => {
     setValue('shipping_name', a.receiver_name)
     setValue('shipping_phone', a.phone)
     setValue('shipping_address', a.address)
@@ -213,7 +213,7 @@ export default function CheckoutPage() {
               {addresses.length > 0 && (
                 <div className="mb-4 space-y-2">
                   {addresses.map(a => (
-                    <button type="button" key={a.id} onClick={() => useAddress(a)} className="w-full text-left border border-gray-200 hover:border-brand rounded-sm p-3 text-xs">
+                    <button type="button" key={a.id} onClick={() => applyAddress(a)} className="w-full text-left border border-gray-200 hover:border-brand rounded-sm p-3 text-xs">
                       <p className="font-semibold text-gray-700">{a.label} — {a.receiver_name}</p>
                       <p className="text-gray-500">{a.address}, {a.city} {a.postal_code}</p>
                     </button>

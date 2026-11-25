@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -19,22 +19,23 @@ export default function AccountPage() {
   const [proofFile, setProofFile] = useState<Record<string, File>>({})
   const [reviewText, setReviewText] = useState<Record<string, string>>({})
   const [reviewRating, setReviewRating] = useState<Record<string, number>>({})
+  const userId = user?.id
 
-  const loadOrders = async () => {
-    if (!user) return
+  const loadOrders = useCallback(async () => {
+    if (!userId) return
     const supabase = createClient()
     const { data, error } = await supabase
       .from('orders')
       .select('*, order_items(*, product:products(name, images, slug)), order_status_history(*)')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .order('created_at', { ascending: false })
 
     if (error) toast.error('Gagal memuat pesanan')
     setOrders((data as Order[] | null) ?? [])
     setLoading(false)
-  }
+  }, [userId])
 
-  useEffect(() => { void loadOrders() }, [user])
+  useEffect(() => { void loadOrders() }, [loadOrders])
 
   const uploadProof = async (order: Order) => {
     const file = proofFile[order.id]

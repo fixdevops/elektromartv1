@@ -43,5 +43,8 @@ Thumbs.db
 *.tsbuildinfo
 next-env.d.ts
 
+# Vercel CLI
+.vercel/
+
 # Agents
 .agents/

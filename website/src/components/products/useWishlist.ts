@@ -8,12 +8,13 @@ import toast from 'react-hot-toast'
 /** Toggle wishlist dengan optimisme lokal dan sinkronisasi ke tabel `wishlists`. */
 export function useWishlist(productId: string) {
   const user = useAuthStore(s => s.user)
+  const userId = user?.id
   const [isWished, setIsWished] = useState(false)
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     let active = true
-    if (!user) {
+    if (!userId) {
       setIsWished(false)
       return
     }
@@ -22,7 +23,7 @@ export function useWishlist(productId: string) {
     supabase
       .from('wishlists')
       .select('id')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .eq('product_id', productId)
       .maybeSingle()
       .then(({ data }) => {
@@ -30,7 +31,7 @@ export function useWishlist(productId: string) {
       })
 
     return () => { active = false }
-  }, [user?.id, productId])
+  }, [userId, productId])
 
   const toggleWishlist = useCallback(async () => {
     if (!user) {
