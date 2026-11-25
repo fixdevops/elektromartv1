@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ee4d2d"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "id.elektromart.app"
@@ -21,13 +23,24 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ee4d2d"
       },
-      "package": "id.elektromart.app"
+      "package": "id.elektromart.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": ["expo-image-picker"],
-    "scheme": "elektromart"
+    "plugins": [
+      "expo-image-picker"
+    ],
+    "scheme": "elektromart",
+    "extra": {
+      "eas": {
+        "projectId": "d687cfe6-0104-4856-9fac-b7c3313aa237"
+      }
+    },
+    "owner": "fixzz"
   }
 }
