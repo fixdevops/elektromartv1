@@ -19,8 +19,11 @@ if errorlevel 1 (
 )
 
 echo Mengambil tautan Expo Go SDK 51...
+set "URLFILE=%TEMP%\expo-go-url.txt"
+npx --yes expo-go url android 51 >"%URLFILE%" 2>&1
 set "URL="
-for /f "usebackq tokens=5" %%A in (`npx --yes expo-go url android 51 2^>nul ^| findstr /C:"https://"`) do set "URL=%%A"
+for /f "usebackq tokens=5" %%A in ("%URLFILE%") do set "URL=%%A"
+del "%URLFILE%" >nul 2>nul
 if not defined URL (
   echo [ERROR] Gagal mengambil tautan unduhan. Cek koneksi internet.
   pause
